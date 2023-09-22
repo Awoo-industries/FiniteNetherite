@@ -31,14 +31,14 @@ jobs:
       - name: Rename File
         run: mv ./target/finiteNetherite-*.jar ./target/build.jar
 
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v4.0.0
-        with:
-          username: "FiniteNetherite"
-          webhook-url: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
-          embed-title: ${{github.sha}}
-          embed-description: ${{github.event.head_commit.message}}
-          filename: ./target/build.jar
+#      - name: Discord Webhook Action
+#        uses: tsickert/discord-webhook@v4.0.0
+#        with:
+#          username: "FiniteNetherite"
+#          webhook-url: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
+#          embed-title: ${{github.sha}}
+#          embed-description: ${{github.event.head_commit.message}}
+#          filename: ./target/build.jar
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
