@@ -5,12 +5,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class EventHandler implements Listener {
-
 
     public Map<Material, Material> itemMap = new HashMap<Material, Material>();
 
@@ -28,12 +28,10 @@ public class EventHandler implements Listener {
 
     @org.bukkit.event.EventHandler(ignoreCancelled = true)
     public void onPlayerItemMend(PlayerItemMendEvent event) {
-
         // Make mending not work on netherite
         if(itemMap.get(event.getItem().getType()) != null){
             event.setCancelled(true);
         }
-
     }
 
     @org.bukkit.event.EventHandler(ignoreCancelled = true)
@@ -45,9 +43,14 @@ public class EventHandler implements Listener {
         if(itemMap.get(type) != null){
             item.setAmount(2);  //Set amount to 2 so the break event still goes trough but we're not left with 0 items.
             item.setType(itemMap.get(type));
+
+            Damageable meta = (Damageable) item.getItemMeta();
+            assert meta != null;
+
+            meta.setDamage(0);
+            item.setItemMeta((org.bukkit.inventory.meta.ItemMeta) meta);
+
         }
-
-
     }
 
 }
