@@ -24,6 +24,18 @@ public class EventHandler implements Listener {
         itemMap.put(Material.NETHERITE_SHOVEL, Material.DIAMOND_SHOVEL);
         itemMap.put(Material.NETHERITE_AXE, Material.DIAMOND_AXE);
         itemMap.put(Material.NETHERITE_HOE, Material.DIAMOND_HOE);
+
+        putIfPresent("NETHERITE_SPEAR", "DIAMOND_SPEAR");
+    }
+
+    // Adds a mapping only if both materials exist on the running server,
+    // keeping support for newer items without bumping the minimum version.
+    private void putIfPresent(String from, String to) {
+        Material fromMaterial = Material.getMaterial(from);
+        Material toMaterial = Material.getMaterial(to);
+        if (fromMaterial != null && toMaterial != null) {
+            itemMap.put(fromMaterial, toMaterial);
+        }
     }
 
     @org.bukkit.event.EventHandler(ignoreCancelled = true)
