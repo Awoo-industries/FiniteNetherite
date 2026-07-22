@@ -1,0 +1,66 @@
+name: Release build
+
+# FiniteNetherite's release orchestrator: derives the version from the tag, then calls the shared
+# reusable workflows to build -> publish. Maven plugin. .github/workflows/build_release.yml.
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v1.0.2)'
+        required: true
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - id: v
+        run: |
+          RAW="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          echo "version=${RAW#v}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    uses: Beeps-Workshop/.github/.github/workflows/build.yml@main
+    with:
+      build-system: maven
+      version: ${{ needs.prepare.outputs.version }}
+      artifact-name: FiniteNetherite
+      jar-glob: target/finiteNetherite-*.jar
+      java-version: '17'
+
+  release:
+    needs: [prepare, build]
+    uses: Beeps-Workshop/.github/.github/workflows/release.yml@main
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+      artifact-name: FiniteNetherite
+      modrinth-id: 5gQIZOWV
+      curseforge-id: '1619423'
+      loaders: |
+        paper
+        spigot
+      game-versions: |
+        1.18
+        1.18.1
+        1.18.2
+        1.19
+        1.19.1
+        1.19.2
+        1.19.3
+        1.19.4
+        1.20.5
+        1.21
+        1.21.1
+        1.21.2
+        1.21.3
+        1.21.4
+        1.21.5
+        1.21.6
+        1.21.7
+        1.21.8
+      version-type: release
+    secrets: inherit
