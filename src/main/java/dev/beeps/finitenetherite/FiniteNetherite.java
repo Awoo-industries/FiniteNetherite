@@ -11,7 +11,7 @@ public final class FiniteNetherite extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getServer().getPluginManager().registerEvents(new EventHandler(), this);
+        getServer().getPluginManager().registerEvents(new EventHandler(this), this);
     }
 
     @Override

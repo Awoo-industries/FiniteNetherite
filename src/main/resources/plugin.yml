@@ -1,7 +1,7 @@
 name: FiniteNetherite
 version: '${project.version}'
 main: dev.beeps.finitenetherite.FiniteNetherite
-api-version: 1.18
+api-version: 1.21.1
 authors: [ BeepSterr ]
 description: Makes it so Netherite gear is not infinite
 website: https://leafcat.live
