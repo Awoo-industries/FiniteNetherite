@@ -5,7 +5,7 @@ name: Snapshot build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 10 * * 1' # Mondays 10:00 UTC
+    - cron: '30 17 * * 5' # Mondays 10:00 UTC
 
 jobs:
   snapshot:
