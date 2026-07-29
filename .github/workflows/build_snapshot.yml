@@ -19,6 +19,7 @@ jobs:
       loaders: |
         paper
         spigot
+        folia
       game-versions: |
         1.21.1
         1.21.2

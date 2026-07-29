@@ -5,3 +5,10 @@ api-version: 1.21.1
 authors: [ BeepSterr ]
 description: Makes it so Netherite gear is not infinite
 website: https://leafcat.live
+
+# Folia
+folia-supported: true
+
+# PluginUpdater
+modrinth-project-id: "5gQIZOWV"
+github-repo: "Beeps-Workshop/FiniteNetherite"

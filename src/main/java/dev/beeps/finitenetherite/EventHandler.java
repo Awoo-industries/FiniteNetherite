@@ -11,7 +11,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.plugin.Plugin;
+import com.tcoded.folialib.FoliaLib;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +27,14 @@ public class EventHandler implements Listener {
             EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
     };
 
-    private final Plugin plugin;
+    private final FoliaLib foliaLib;
+    private final MetricContainer metrics;
 
     public Map<Material, Material> itemMap = new HashMap<Material, Material>();
 
-    public EventHandler(Plugin plugin){
-        this.plugin = plugin;
+    public EventHandler(FoliaLib foliaLib, MetricContainer metrics){
+        this.foliaLib = foliaLib;
+        this.metrics = metrics;
 
         itemMap.put(Material.NETHERITE_HELMET, Material.DIAMOND_HELMET);
         itemMap.put(Material.NETHERITE_CHESTPLATE, Material.DIAMOND_CHESTPLATE);
@@ -77,11 +79,14 @@ public class EventHandler implements Listener {
         // Try to spend the XP on another eligible item instead of wasting the mend.
         int spentXp = redirectMending(event.getPlayer(), orbXp);
         if (spentXp > 0) {
+            metrics.mendingXpRedirected += spentXp;
             // The player is about to receive the full orb XP (from the cancel, next tick).
             // Claw back the portion we spent repairing the redirected item so the XP is
             // genuinely redirected rather than duplicated. If no item was found, this is
             // skipped and the player simply keeps the XP.
-            plugin.getServer().getScheduler().runTask(plugin, () -> event.getPlayer().giveExp(-spentXp));
+            // Scheduled against the player so Folia runs it on that entity's region thread;
+            // on Spigot/Paper this falls back to a plain next-tick task.
+            foliaLib.getScheduler().runAtEntity(event.getPlayer(), task -> event.getPlayer().giveExp(-spentXp));
         }
     }
 
@@ -147,6 +152,7 @@ public class EventHandler implements Listener {
             meta.setDamage(0);
             item.setItemMeta((org.bukkit.inventory.meta.ItemMeta) meta);
 
+            metrics.itemsDegraded++;
         }
     }
 
