@@ -32,7 +32,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <!-- 3.6.2+ is required: older shade bundles an ASM that can't parse
+                     Java 17 class files when relocating. -->
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
