@@ -1,21 +1,17 @@
 name: Snapshot build
 
-# Weekly snapshot: builds & publishes an alpha every Monday if there were commits that week.
-# Delegates to the shared reusable snapshot workflow. .github/workflows/build_snapshot.yml.
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 17 * * 5' # Mondays 10:00 UTC
+    - cron: '0 10 * * *' # Daily 10:00 UTC
 
 jobs:
   snapshot:
     uses: Beeps-Workshop/.github/.github/workflows/snapshot.yml@main
     with:
       build-system: maven
-      artifact-name: FiniteNetherite
+      project: fn
       jar-glob: target/finiteNetherite-*.jar
-      modrinth-id: 5gQIZOWV
-      curseforge-id: '1619423'
       loaders: |
         paper
         spigot
